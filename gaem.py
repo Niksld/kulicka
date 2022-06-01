@@ -22,13 +22,29 @@ w.resizable(False,False)
 # //CHILD WINDOW
 
 #Child W. methods
-def add_ball():
+def add_random_ball():
     global OBJECTS
     temp = Objects.Ball(f"ball{len(OBJECTS)+1}",c)
     temp.posx = randrange(W_WIDTH)
     temp.posy = randrange(W_HEIGHT)
+    temp.reverse_x = choice([True,False])
+    temp.reverse_y = choice([True,False])
     temp.color = choice(COLORS)
     OBJECTS.append(temp)
+
+def click_add_ball(event):
+    global OBJECTS
+    temp = Objects.Ball(f"ball{len(OBJECTS)+1}",c)
+    temp.posx = event.x
+    temp.posy = event.y
+    temp.reverse_x = choice([True,False])
+    temp.reverse_y = choice([True,False])
+    temp.color = choice(COLORS)
+    OBJECTS.append(temp)
+
+def clear_canvas():
+    global OBJECTS
+    OBJECTS.clear()
 
 
 #  Create child window / controls
@@ -55,12 +71,19 @@ velocity_y = Scale(
 btn_add_ball = Button(
     w_controls,
     text="Add Ball",
-    command=add_ball
+    command=add_random_ball
+)
+
+btn_clear_balls = Button(
+    w_controls,
+    text='Clear Canvas',
+    command=clear_canvas   
 )
 
 velocity_x.pack()
 velocity_y.pack()
 btn_add_ball.pack()
+btn_clear_balls.pack()
 
 #  Window Methods
 def exit_app():
@@ -135,11 +158,18 @@ def check_edge_hit(obj):
     else:
         obj.posy += posy_adjust
         
+def check_object_hit(obj):
+    global OBJECTS
 
-    print(f"{obj.tag}: X {obj.posx} Y {obj.posy} Center {obj.centered_pos}")
-    # obj.posx += ball_gravity_x.get()
-    # obj.posy += ball_gravity_y.get()
+    #check all objects for intercept
+    for object in OBJECTS:
+        if object == obj:
+            continue
 
+        if range(obj.posx,obj.posx+obj.size) in range(object.posx,object.posx+object.size):
+            print('reversed')
+            obj.reverse_x = not obj.reverse_x
+            object.reverse_x = not obj.reverse_x 
 
 def draw_scene() -> None:
     c.delete('all')
@@ -148,8 +178,9 @@ def draw_scene() -> None:
 
 def update():
     #  Hitbox code
-    for object in OBJECTS:
-        check_edge_hit(object)
+    for obj in OBJECTS:
+        check_object_hit(obj)
+        check_edge_hit(obj)
 
 def loop():
     update()
@@ -160,4 +191,5 @@ w.protocol('WM_DELETE_WINDOW', exit_app)
 w_controls.protocol('WM_DELETE_WINDOW', exit_app)
 loop()
 
+c.bind("<Button-1>", click_add_ball)
 c.mainloop()
