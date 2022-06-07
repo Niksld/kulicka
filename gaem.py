@@ -18,6 +18,9 @@ w.title('kulicka :)')
 c = Canvas(width=W_WIDTH,height=W_HEIGHT)
 c.pack()
 w.resizable(False,False)
+ws = w.winfo_screenwidth() # width of the screen
+hs = w.winfo_screenheight() # height of the screen
+w.geometry(f"{W_WIDTH}x{W_HEIGHT}+{int(ws/8)}+{int(hs/8)}")
 
 # //CHILD WINDOW
 
@@ -49,7 +52,7 @@ def clear_canvas():
 
 #  Create child window / controls
 w_controls = Toplevel(w)
-w_controls.geometry('400x600')
+w_controls.geometry(f"400x600+{int(ws/8+W_WIDTH)}+{int(hs/8)}")
 w_controls.title(f'{w.title()} - Controls')
 w_controls.resizable(False,False)
 velocity_x = Scale(
@@ -86,6 +89,25 @@ btn_add_ball.pack()
 btn_clear_balls.pack()
 
 #  Window Methods
+def check_window_move():
+    global ws,hs
+    if w_controls.winfo_x() != w.winfo_x()+W_WIDTH:
+        if w.winfo_x()+W_WIDTH+400 > ws:
+            print('lolec')
+            #w_controls.geometry(f"400x600+{w.winfo_x()-400}+{int(hs/8)}")
+            w_controls.geometry(f"+{w.winfo_x()-400}+0")
+        else:
+            w_controls.geometry(f"+{w.winfo_x()+W_WIDTH}+0")
+            print('nelolec')
+
+    if w_controls.winfo_y() != w.winfo_y():
+        w_controls.geometry(f"+0+{w.winfo_y()}")
+
+    print(ws,hs,w.winfo_x(),w.winfo_y())
+    print(w_controls.winfo_x(),w_controls.winfo_y())
+    print(w_controls.winfo_x()+400+W_WIDTH,w_controls.winfo_x()+400+W_WIDTH> ws)
+
+
 def exit_app():
     
     #  Dont even ask.
@@ -176,11 +198,20 @@ def draw_scene() -> None:
     for object in OBJECTS:
         object.draw()
 
+
+
+
 def update():
     #  Hitbox code
     for obj in OBJECTS:
         check_object_hit(obj)
         check_edge_hit(obj)
+    #check_window_move()
+
+
+
+
+
 
 def loop():
     update()
