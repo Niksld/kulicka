@@ -135,13 +135,13 @@ def check_edge_hit(obj):
 
     # X
     # Screen Border checks
-    if obj.posx + obj.size == W_WIDTH:
+    if obj.posx + obj.size_x == W_WIDTH:
         obj.reverse_x = True
     elif obj.posx == 0:
         obj.reverse_x = False
     # Check for hits that would miss the screen border
-    elif (obj.posx + obj.size + posx_adjust) > W_WIDTH:
-        posx_adjust = (obj.posx + obj.size) - W_WIDTH
+    elif (obj.posx + obj.size_x + posx_adjust) > W_WIDTH:
+        posx_adjust = (obj.posx + obj.size_x) - W_WIDTH
         obj.reverse_x = True
     elif obj.posx - posx_adjust < 0:
         posx_adjust = 0
@@ -150,14 +150,14 @@ def check_edge_hit(obj):
 
     # Y
     # Screen Border checks
-    if obj.posy + obj.size == W_HEIGHT:
+    if obj.posy + obj.size_y == W_HEIGHT:
         obj.reverse_y = True
     elif obj.posy == 0:
         obj.reverse_y = False
     # Check for other hits
-    elif (obj.posy + obj.size + posy_adjust) > W_HEIGHT:
+    elif (obj.posy + obj.size_y + posy_adjust) > W_HEIGHT:
         posy_adjust = 0
-        obj.posy = W_HEIGHT - obj.size
+        obj.posy = W_HEIGHT - obj.size_y
         obj.reverse_y = True
     elif obj.posy - posy_adjust < 0:
         posy_adjust = 0
@@ -188,7 +188,7 @@ def check_object_hit(obj):
         if object == obj:
             continue
 
-        if range(obj.posx,obj.posx+obj.size) in range(object.posx,object.posx+object.size):
+        if range(obj.posx,obj.posx+obj.size_x) in range(object.posx,object.posx+object.size_x):
             print('reversed')
             obj.reverse_x = not obj.reverse_x
             object.reverse_x = not obj.reverse_x 
