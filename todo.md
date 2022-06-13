@@ -1,1 +1,2 @@
-#Add spawn on mouse click (position as well)
+- Add object hitboxes
+- Add a more realistic bounce
